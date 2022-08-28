@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdint>
+#include <fstream>
 
 // curly brackets for key pairs
 
@@ -17,9 +18,9 @@ public:
 	uint16_t opCode{};
 
 	Chip8(); // CONSTRUCTOR -> what does it do? why is keypad mapped to this
-		void Cycle();
-		void LoadROM(); 
+		void LoadROM();
 		void Random();
+		void Cycle();
 	~Chip8(); //DESTRUCTOR
 
 	// make structs of key:pair value "types" for opcodes
@@ -28,21 +29,37 @@ public:
 
 };
 
-// load in stuff using constructor
-Chip8::Chip8() {
-	//fontset declaration
-
-	// so like clear registers stack and mem and everything lol incl display
-
-}
+// load in stuff using constructor (first executed instructions)
 
 
 //declaring function method contents outside of class
-void Chip8::Cycle() {
+
+const unsigned int START_ADDRESS = 0x200;
+
+void Chip8::LoadROM() {
+
+	std::ifstream
+
+
+
+
 
 }
 
-void Chip8::LoadROM() {
+Chip8::Chip8() {
+
+	// dont need a void init() cus constructor is init? 
+	// set init address for interpreter
+	//fontset declaration
+	// so like clear registers stack and mem and everything lol incl display
+	programCounter = START_ADDRESS;
+
+}
+
+
+void Chip8::Cycle() {
+
+	// this is where opcode shit happens
 
 }
 
