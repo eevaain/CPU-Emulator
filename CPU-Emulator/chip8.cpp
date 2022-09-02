@@ -56,9 +56,13 @@ Chip8::Chip8() { //constructor
 
 
 	//RNG
-
-	randomByte = 
-
+	const int MAX_N = 255;
+	const int min_n = 0;
+	char random_hex[MAX_N];
+	int new_n;
+	new_n = (rand() % MAX_N);
+	_itoa_s(new_n, random_hex, 16); // converts dec to hex
+	std::cout << "\nEquivalent Hex Byte: " << random_hex << std::endl << "\n";
 }
 
 void Chip8::loadROM(char const* filename) { 
@@ -67,7 +71,7 @@ void Chip8::loadROM(char const* filename) {
 	std::streampos size;
 	char* memblock; //create buffer to store ROM 
 
-	std::ifstream file(filename, std::ios::in | std::ios::binary | std::ios::ate); //pointer is at end of file
+	std::ifstream file(filename, std::ios::in | std::ios::binary | std::ios::ate); // pointer is at end of file
 	if (file.is_open()) {
 		size = file.tellg();
 		memblock = new char[size];			   // obtain size of file
@@ -78,7 +82,7 @@ void Chip8::loadROM(char const* filename) {
 		std::cout << "ROM is stored in memory";
 
 		for (
-			int i = 0;
+			long i = 0;
 			i < size;
 			++i
 			) {
@@ -95,8 +99,9 @@ void Chip8::Cycle() {
 
 }
 
-
-
-
-
 Chip8::~Chip8() {}
+
+
+void Chip8::OP_00E0() {
+
+}
