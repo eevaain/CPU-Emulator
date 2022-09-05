@@ -54,7 +54,6 @@ Chip8::Chip8() { //constructor
 		Chip8::memory[FONTSET_START + i] = fontset[i];
 	}
 
-
 	//RNG
 	const int MAX_N = 255;
 	const int min_n = 0;
@@ -62,8 +61,244 @@ Chip8::Chip8() { //constructor
 	int new_n;
 	new_n = (rand() % MAX_N);
 	_itoa_s(new_n, random_hex, 16); // converts dec to hex
-	std::cout << "\nEquivalent Hex Byte: " << random_hex << std::endl << "\n";
+	std::cout << "\n Random Equivalent Hex Byte: " << random_hex << std::endl << "\n";
+
+
+	// load in functions for parent array
+	tableParent[0x0] = &Chip8::branchTo_Table0; //0
+		table0_sub[0x0] = &Chip8::OP_00E0;
+		table0_sub[0xE] = &Chip8::OP_00EE;
+	tableParent[0x1] = &Chip8::OP_1nnn; //1
+	tableParent[0x2] = &Chip8::OP_2nnn; //2
+	tableParent[0x3] = &Chip8::OP_3xkk; //3
+	tableParent[0x4] = &Chip8::OP_4xkk; //4
+	tableParent[0x5] = &Chip8::OP_5xy0; //5
+	tableParent[0x6] = &Chip8::OP_6xkk; //6
+	tableParent[0x7] = &Chip8::OP_7xkk; //7
+	tableParent[0x8] = &Chip8::branchTo_Table8; //8
+		table8_sub[0x0] = &Chip8::OP_8xy0;
+		table8_sub[0x1] = &Chip8::OP_8xy1;
+		table8_sub[0x2] = &Chip8::OP_8xy2;
+		table8_sub[0x3] = &Chip8::OP_8xy3;
+		table8_sub[0x4] = &Chip8::OP_8xy4;
+		table8_sub[0x5] = &Chip8::OP_8xy5;
+		table8_sub[0x6] = &Chip8::OP_8xy6;
+		table8_sub[0x7] = &Chip8::OP_8xy7;
+		table8_sub[0xE] = &Chip8::OP_8xyE;
+	tableParent[0x9] = &Chip8::OP_9xy0; //9
+	tableParent[0xA] = &Chip8::OP_Annn; //A
+	tableParent[0xB] = &Chip8::OP_Bnnn; //B
+	tableParent[0xC] = &Chip8::OP_Cxkk; //C
+	tableParent[0xD] = &Chip8::OP_Dxyn; //D
+	tableParent[0xE] = &Chip8::branchTo_TableE; //E
+		tableE_sub[0x9E] = &Chip8::OP_Ex9E;
+		tableE_sub[0xA1] = &Chip8::OP_ExA1;
+	tableParent[0xF] = &Chip8::branchTo_TableF; //F
+	tableF_sub[0x07] = &Chip8::OP_Fx07;
+	tableF_sub[0x0A] = &Chip8::OP_Fx0A;
+	tableF_sub[0x15] = &Chip8::OP_Fx15;
+	tableF_sub[0x18] = &Chip8::OP_Fx18;
+	tableF_sub[0x1E] = &Chip8::OP_Fx1E;
+	tableF_sub[0x29] = &Chip8::OP_Fx29;
+	tableF_sub[0x33] = &Chip8::OP_Fx33;
+	tableF_sub[0x55] = &Chip8::OP_Fx55;
+	tableF_sub[0x65] = &Chip8::OP_Fx65;
+
 }
+
+// function definitions
+
+void Chip8::branchTo_Table0() {
+
+
+}
+
+void Chip8::OP_00E0() {
+
+
+}
+
+void Chip8::OP_00EE() {
+
+
+}
+
+void Chip8::OP_1nnn() {
+
+
+}
+
+void Chip8::OP_2nnn() {
+
+
+}
+
+void Chip8::OP_3xkk() {
+
+
+}
+
+void Chip8::OP_4xkk() {
+
+
+}
+
+void Chip8::OP_5xy0() {
+
+
+}
+
+void Chip8::OP_6xkk() {
+
+
+}
+
+void Chip8::OP_7xkk() {
+
+
+}
+
+void Chip8::branchTo_Table8() {
+
+
+}
+
+void Chip8::OP_8xy0() {
+
+
+}
+
+void Chip8::OP_8xy1() {
+
+
+}
+
+void Chip8::OP_8xy2() {
+
+
+}
+
+void Chip8::OP_8xy3() {
+
+
+}
+
+void Chip8::OP_8xy4() {
+
+
+}
+
+void Chip8::OP_8xy5() {
+
+
+}
+
+void Chip8::OP_8xy6() {
+
+
+}
+
+void Chip8::OP_8xy7() {
+
+
+}
+
+void Chip8::OP_8xyE() {
+
+
+}
+
+void Chip8::OP_9xy0() {
+
+
+}
+
+void Chip8::OP_Annn() {
+
+
+}
+
+void Chip8::OP_Bnnn() {
+
+
+}
+
+void Chip8::OP_Cxkk() {
+
+
+}
+
+void Chip8::OP_Dxyn() {
+
+
+}
+
+void Chip8::branchTo_TableE() {
+
+
+}
+
+void Chip8::OP_Ex9E() {
+
+
+}
+
+void Chip8::OP_ExA1() {
+
+
+}
+
+void Chip8::branchTo_TableF() {
+
+
+}
+
+void Chip8::OP_Fx07() {
+
+
+}
+
+void Chip8::OP_Fx0A() {
+
+
+}
+
+void Chip8::OP_Fx15() {
+
+
+}
+
+void Chip8::OP_Fx18() {
+
+
+}
+
+void Chip8::OP_Fx1E() {
+
+
+}
+
+void Chip8::OP_Fx29() {
+
+
+}
+
+
+void Chip8::OP_Fx33() {
+
+
+}
+
+void Chip8::OP_Fx55() {
+
+
+}
+
+void Chip8::OP_Fx65() {
+
+
+}
+
 
 void Chip8::loadROM(char const* filename) { 
 // filename represents address of an array of bytes where read elements are stored
@@ -101,7 +336,3 @@ void Chip8::Cycle() {
 
 Chip8::~Chip8() {}
 
-
-void Chip8::OP_00E0() {
-
-}
