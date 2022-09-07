@@ -109,103 +109,178 @@ Chip8::Chip8() { //constructor
 // function definitions
 
 void Chip8::branchTo_Table0() {
-
-
+	// TODO
 }
 
 void Chip8::OP_00E0() {
-
-
+	memset(display, 0, sizeof(display)); 
 }
 
 void Chip8::OP_00EE() {
-
-
+	--sp;
+	pc = stack[sp];
 }
 
 void Chip8::OP_1nnn() {
-
-
+	uint16_t address = (opcode & 0x0FFF);
+	pc = address; 
 }
 
 void Chip8::OP_2nnn() {
-
-
+	uint16_t address = (opcode & 0x0FFF);
+	stack[sp] = pc; 
+	++sp;
+	pc = address; 
 }
 
 void Chip8::OP_3xkk() {
-
-
+	uint8_t register_index = (opcode & 0x0F00) >> 8;
+	uint8_t register_value = registers[register_index];
+	uint8_t address = (opcode & 0x00FF);
+	
+	if (register_value == address) {
+		pc += 2;
+	}
 }
 
 void Chip8::OP_4xkk() {
+	uint8_t register_index = (opcode & 0x0F00) >> 8;
+	uint8_t register_value = registers[register_index];
+	uint8_t address = (opcode & 0x00FF);
 
-
+	if (register_value != address) {
+		pc += 2;
+	}
 }
 
 void Chip8::OP_5xy0() {
+	uint8_t reg_index_x = (opcode & 0x0F00) >> 8;
+	uint8_t reg_index_y = (opcode & 0x00F0) >> 4;
+	uint8_t reg_value_x = registers[reg_index_x];
+	uint8_t reg_value_y = registers[reg_index_y];
 
-
+	if (reg_value_x == reg_value_y) {
+		pc += 2;
+	}
 }
 
 void Chip8::OP_6xkk() {
-
-
+	uint8_t reg_index_x = (opcode & 0x0F00) >> 8;
+	uint8_t address = (opcode & 0x00FF);
+	registers[reg_index_x] = address; 
 }
 
 void Chip8::OP_7xkk() {
-
-
+	uint8_t reg_index_x = (opcode & 0x0F00) >> 8;
+	uint8_t value = (opcode & 0x00FF);
+	registers[reg_index_x] += value;
 }
 
 void Chip8::branchTo_Table8() {
-
-
+	// TODO
 }
 
 void Chip8::OP_8xy0() {
-
-
+	uint8_t reg_index_x = (opcode & 0x0F00) >> 8;
+	uint8_t reg_index_y = (opcode & 0x00F0) >> 4;
+	uint8_t reg_val_y = registers[reg_index_y]; 
+	registers[reg_index_x] = reg_val_y; 
 }
 
 void Chip8::OP_8xy1() {
-
-
+	uint8_t reg_index_x = (opcode & 0x0F00) >> 8;
+	uint8_t reg_index_y = (opcode & 0x00F0) >> 4;
+	uint8_t reg_val_x = registers[reg_index_x];
+	uint8_t reg_val_y = registers[reg_index_y];
+	registers[reg_index_x] = (reg_val_x | reg_val_y); 
 }
 
 void Chip8::OP_8xy2() {
-
-
+	uint8_t reg_index_x = (opcode & 0x0F00) >> 8;
+	uint8_t reg_index_y = (opcode & 0x00F0) >> 4;
+	uint8_t reg_val_x = registers[reg_index_x];
+	uint8_t reg_val_y = registers[reg_index_y];
+	registers[reg_index_x] = (reg_val_x & reg_val_y);
 }
 
 void Chip8::OP_8xy3() {
-
-
+	uint8_t reg_index_x = (opcode & 0x0F00) >> 8;
+	uint8_t reg_index_y = (opcode & 0x00F0) >> 4;
+	uint8_t reg_val_x = registers[reg_index_x];
+	uint8_t reg_val_y = registers[reg_index_y];
+	registers[reg_index_x] = (reg_val_x ^ reg_val_y);
 }
 
 void Chip8::OP_8xy4() {
+	uint8_t reg_index_x = (opcode & 0x0F00) >> 8;
+	uint8_t reg_index_y = (opcode & 0x00F0) >> 4;
+	uint8_t reg_val_x = registers[reg_index_x];
+	uint8_t reg_val_y = registers[reg_index_y];
+	uint16_t addition = reg_val_x + reg_val_y; 
 
-
+	if (addition > 255) {
+		registers[0xF] = 1; 
+	}
+	else {
+		registers[0xF] = 0;
+	}
+	registers[reg_index_x] = (addition & 0x00FF);
 }
 
-void Chip8::OP_8xy5() {
+void Chip8::OP_8xy5() { //double check
+	uint8_t reg_index_x = (opcode & 0x0F00) >> 8;
+	uint8_t reg_index_y = (opcode & 0x00F0) >> 4;
+	uint8_t reg_val_x = registers[reg_index_x];
+	uint8_t reg_val_y = registers[reg_index_y];
 
-
+	if (reg_val_x > reg_val_y) {
+		registers[0xF] = 1;
+	}
+	else {
+		registers[0xF] = 0;
+	}
+	registers[reg_index_x] = reg_val_x - reg_val_y;
 }
 
-void Chip8::OP_8xy6() {
+void Chip8::OP_8xy6() { //double check (this is least significant bit) 
+	uint8_t reg_index_x = (opcode & 0x0F00) >> 8;
+	uint8_t reg_val_x = registers[reg_index_x];
 
-
+	if ((reg_val_x & 0x1) == 1) { // least sig bit
+		registers[0xF] = 1;
+	}
+	else {
+		registers[0xF] = 0;
+	}
+	registers[reg_index_x] = (reg_val_x >> 1); 
 }
 
-void Chip8::OP_8xy7() {
+void Chip8::OP_8xy7() { //double check... wait nvm this one looks pretty accurate
+	uint8_t reg_index_x = (opcode & 0x0F00) >> 8;
+	uint8_t reg_index_y = (opcode & 0x00F0) >> 4;
+	uint8_t reg_val_x = registers[reg_index_x];
+	uint8_t reg_val_y = registers[reg_index_y];
 
-
+	if (reg_val_y > reg_val_x) {
+		registers[0xF] = 1;
+	}
+	else {
+		registers[0xF] = 0;
+	}
+	registers[reg_index_x] = reg_val_y - reg_val_x; 
 }
 
-void Chip8::OP_8xyE() {
+void Chip8::OP_8xyE() { // double check this is most significant bit
+	uint8_t reg_index_x = (opcode & 0x0F00) >> 8;
+	uint8_t reg_val_x = registers[reg_index_x];
 
-
+	if (((reg_val_x & 0x80) >> 7) == 1) { // most sig bit
+		registers[0xF] = 1;
+	}
+	else {
+		registers[0xF] = 0;
+	}
+	registers[reg_index_x] = (reg_val_x << 1); 
 }
 
 void Chip8::OP_9xy0() {
@@ -331,6 +406,9 @@ void Chip8::loadROM(char const* filename) {
 
 
 void Chip8::Cycle() {
+	
+	//some opcode decoding fetching from rom and parseing it through bitwise oper.
+	//program couner increment before execution
 
 }
 
