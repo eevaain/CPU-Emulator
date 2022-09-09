@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <random>
 
 
 class Chip8 {
@@ -28,6 +29,7 @@ private:
 	uint8_t keys[16]{};
 	uint32_t display[64 * 32]{};
 	uint16_t opcode{};
+
 
 	typedef void (Chip8::*memAddressSpace)();
 	memAddressSpace tableParent[0xF + 1];		//single parse opcodes or... 

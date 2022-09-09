@@ -2,11 +2,13 @@
 #include <cstdint>
 #include <fstream>
 
+#include <cstdlib>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+
 #include "chip8.hpp"
 #include <random>
+#include <chrono>
 
 /*
 USING uint automatically translates hex into binary
@@ -14,37 +16,38 @@ we use unsigned ints to know value we are storing is positive
 
 */
 
+const unsigned CHIP8_FONTSET = 80;
+const unsigned FONTSET_START = 0x50;
 const unsigned int START_ADDRESS = 0x200; //512 dec, address 513
 
 
-Chip8::Chip8() { //constructor
+uint8_t fontset[CHIP8_FONTSET] = {
+		0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+		0x20, 0x60, 0x20, 0x20, 0x70, // 1
+		0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+		0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+		0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+		0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+		0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+		0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+		0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+		0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+		0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+		0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+		0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+		0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+		0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+		0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+};
+
+
+Chip8::Chip8() 
+
+{ //constructor
 
 	pc = START_ADDRESS; 
 
 	// load in FONTS
-	
-	const unsigned CHIP8_FONTSET = 80;
-
-	uint8_t fontset[CHIP8_FONTSET] = {
-			0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
-			0x20, 0x60, 0x20, 0x20, 0x70, // 1
-			0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
-			0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
-			0x90, 0x90, 0xF0, 0x10, 0x10, // 4
-			0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
-			0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
-			0xF0, 0x10, 0x20, 0x40, 0x40, // 7
-			0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
-			0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
-			0xF0, 0x90, 0xF0, 0x90, 0x90, // A
-			0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
-			0xF0, 0x80, 0x80, 0x80, 0xF0, // C
-			0xE0, 0x90, 0x90, 0x90, 0xE0, // D
-			0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-			0xF0, 0x80, 0xF0, 0x80, 0x80  // F
-	};
-
-	const unsigned FONTSET_START = 0x50;
 
 	for (
 		int i = 0;
@@ -53,15 +56,6 @@ Chip8::Chip8() { //constructor
 		) {
 		Chip8::memory[FONTSET_START + i] = fontset[i];
 	}
-
-	//RNG
-	const int MAX_N = 255;
-	const int min_n = 0;
-	char random_hex[MAX_N];
-	int new_n;
-	new_n = (rand() % MAX_N);
-	_itoa_s(new_n, random_hex, 16); // converts dec to hex
-	std::cout << "\n Random Equivalent Hex Byte: " << random_hex << std::endl << "\n";
 
 
 	// load in functions for parent array
@@ -91,8 +85,8 @@ Chip8::Chip8() { //constructor
 	tableParent[0xC] = &Chip8::OP_Cxkk; //C
 	tableParent[0xD] = &Chip8::OP_Dxyn; //D
 	tableParent[0xE] = &Chip8::branchTo_TableE; //E
-		tableE_sub[0x9E] = &Chip8::OP_Ex9E;
-		tableE_sub[0xA1] = &Chip8::OP_ExA1;
+		tableE_sub[0xE] = &Chip8::OP_Ex9E; //save memory instead of using 9E (E)
+		tableE_sub[0x1] = &Chip8::OP_ExA1; //save memory instead of A1 (1)
 	tableParent[0xF] = &Chip8::branchTo_TableF; //F
 	tableF_sub[0x07] = &Chip8::OP_Fx07;
 	tableF_sub[0x0A] = &Chip8::OP_Fx0A;
@@ -110,6 +104,8 @@ Chip8::Chip8() { //constructor
 
 void Chip8::branchTo_Table0() {
 	// TODO
+	uint8_t table_index = (opcode & 0x000F);
+	(this->*(table0_sub[table_index]))();
 }
 
 void Chip8::OP_00E0() {
@@ -177,7 +173,8 @@ void Chip8::OP_7xkk() {
 }
 
 void Chip8::branchTo_Table8() {
-	// TODO
+	uint8_t table_index = (opcode & 0x000F);
+	(this->*(table0_sub[table_index]))();
 }
 
 void Chip8::OP_8xy0() {
@@ -284,33 +281,80 @@ void Chip8::OP_8xyE() { // double check this is most significant bit
 }
 
 void Chip8::OP_9xy0() {
+	uint8_t reg_index_x = (opcode & 0x0F00) >> 8;
+	uint8_t reg_index_y = (opcode & 0x00F0) >> 4;
+	uint8_t reg_val_x = registers[reg_index_x];
+	uint8_t reg_val_y = registers[reg_index_y];
 
-
+	if (reg_val_x != reg_val_y) {
+		pc += 2; 
+	}
 }
 
 void Chip8::OP_Annn() {
-
-
+	uint16_t set_address = (opcode & 0x0FFF); 
+	index = set_address;
 }
 
 void Chip8::OP_Bnnn() {
-
-
+	uint16_t set_address = (opcode & 0x0FFF);
+	pc = (set_address + registers[0]);
 }
 
 void Chip8::OP_Cxkk() {
+	uint8_t reg_index_x = (opcode & 0x0F00) >> 8;
+	uint8_t set_address = (opcode & 0x00FF);
 
+	//gotta fix this random thing
+	srand(time(NULL));
+	// Get a random number
+	int random = (rand() % 255);
+	// Print the random number
+	std::cout << random << std::endl;
 
+	registers[reg_index_x] = (set_address & random); 
 }
 
-void Chip8::OP_Dxyn() {
+void Chip8::OP_Dxyn() { // NOT MY CODE
+	uint8_t Vx = (opcode & 0x0F00u) >> 8u;
+	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
+	uint8_t height = opcode & 0x000Fu;
 
+	// Wrap if going beyond screen boundaries
+	uint8_t xPos = registers[Vx] % VIDEO_WIDTH;
+	uint8_t yPos = registers[Vy] % VIDEO_HEIGHT;
+
+	registers[0xF] = 0;
+
+	for (unsigned int row = 0; row < height; ++row)
+	{
+		uint8_t spriteByte = memory[index + row];
+
+		for (unsigned int col = 0; col < 8; ++col)
+		{
+			uint8_t spritePixel = spriteByte & (0x80u >> col);
+			uint32_t* screenPixel = &display[(yPos + row) * VIDEO_WIDTH + (xPos + col)];
+
+			// Sprite pixel is on
+			if (spritePixel)
+			{
+				// Screen pixel also on - collision
+				if (*screenPixel == 0xFFFFFFFF)
+				{
+					registers[0xF] = 1;
+				}
+
+				// Effectively XOR with the sprite pixel
+				*screenPixel ^= 0xFFFFFFFF;
+			}
+		}
+	}
 
 }
 
 void Chip8::branchTo_TableE() {
-
-
+	uint8_t table_index = (opcode & 0x000F);
+	(this->*(table0_sub[table_index]))();
 }
 
 void Chip8::OP_Ex9E() {
