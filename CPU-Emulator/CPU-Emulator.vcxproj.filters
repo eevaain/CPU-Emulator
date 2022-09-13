@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\ROMS">
+      <UniqueIdentifier>{63321de6-9cca-48b2-ba55-1bd968d87991}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -21,10 +24,93 @@
     <ClCompile Include="chip8.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="platform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="chip8.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="platform.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\PONG">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\PONG2">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\PUZZLE">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\SYZYGY">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\TANK">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\TETRIS">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\TICTAC">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\UFO">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\VBRIX">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\VERS">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\WIPEOFF">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\15PUZZLE">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\BLINKY">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\BLITZ">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\BRIX">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\CONNECT4">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\GUESS">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\HIDDEN">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\INVADERS">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\KALEID">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\MAZE">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\MERLIN">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\rust-chip8-main\data\MISSILE">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\chip8-test-rom-master\test_opcode.ch8">
+      <Filter>Source Files\ROMS</Filter>
+    </None>
+    <None Include="..\..\..\Users\Paula\Downloads\chip8-test-rom-master\test_opcode.8o">
+      <Filter>Source Files\ROMS</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -8,6 +8,9 @@
 #include <time.h>
 #include <random>
 
+const unsigned int VIDEO_HEIGHT = 32;
+const unsigned int VIDEO_WIDTH = 64;
+
 
 class Chip8 {
 public:
@@ -15,8 +18,8 @@ public:
 	~Chip8();
 	void loadROM(char const* filename);
 	void Cycle();
-	// maybe move keypad here
-	// maybe move video here
+	uint8_t keypad[16]{};
+	uint32_t display[64 * 32]{};
 private:
 	uint8_t registers[16]{};
 	uint8_t memory[4096]{};
@@ -26,8 +29,6 @@ private:
 	uint8_t sp{};
 	uint8_t delayTimer{};
 	uint8_t soundTimer{};
-	uint8_t keys[16]{};
-	uint32_t display[64 * 32]{};
 	uint16_t opcode{};
 
 
